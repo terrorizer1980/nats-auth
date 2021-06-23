@@ -9,6 +9,7 @@
   "scripts": {
     "build": "rm -rf dist && tsc",
     "start": "npm run build && node dist/index.js",
+    "prod": "node dist/index.js",
     "dev": "ts-node-dev src/index.ts",
     "test": "ts-mocha --check-leaks --exit --timeout 60000 'src/**/*.spec.ts'"
   },
