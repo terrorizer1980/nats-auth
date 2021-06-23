@@ -30,7 +30,7 @@ const messagingService = new MessagingAuthService(
     publicKey: config.publicKey!,
   },
   logger.child({ module: "MessagingAuthService" }),
-  config.adminToken,
+  config.adminToken
 );
 
 // Used during startup to monitor whether this service is awake & responsive
@@ -39,12 +39,14 @@ server.get("/ping", async () => {
 });
 
 server.get<{ Params: GetNonceRequestParams }>(
-  "/auth/:userIdentifier",
-  { schema: { params: getNonceParamsSchema, response: getNonceResponseSchema } },
-  async (request, reply) => {
-    const nonce = await messagingService.getNonce(request.params.userIdentifier);
-    return reply.status(200).send(nonce);
+  "/auth/:signerAddress",
+  {
+    schema: { params: getNonceParamsSchema, response: getNonceResponseSchema },
   },
+  async (request, reply) => {
+    const nonce = await messagingService.getNonce(request.params.signerAddress);
+    return reply.status(200).send(nonce);
+  }
 );
 
 server.post<{ Body: PostAuthRequestBody }>(
@@ -53,14 +55,14 @@ server.post<{ Body: PostAuthRequestBody }>(
   async (request, reply) => {
     const token = await messagingService.verifyAndVend(
       request.body.sig,
-      request.body.userIdentifier,
-      request.body.adminToken,
+      request.body.signerAddress,
+      request.body.adminToken
     );
     return reply.status(200).send(token);
-  },
+  }
 );
 
-server.listen(config.port, "0.0.0.0", err => {
+server.listen(config.port, "0.0.0.0", (err) => {
   if (err) {
     console.error(err);
     process.exit(1);
