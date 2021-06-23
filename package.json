@@ -8,6 +8,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "rm -rf dist && tsc",
+    "start": "npm run build && node dist/index.js",
     "test": "ts-mocha --check-leaks --exit --timeout 60000 'src/**/*.spec.ts'"
   },
   "dependencies": {
@@ -36,6 +37,7 @@
     "ts-loader": "^9.2.3",
     "ts-mocha": "^8.0.0",
     "ts-node": "^10.0.0",
+    "ts-node-dev": "^1.1.6",
     "typescript": "^4.3.4"
   }
 }
