@@ -58,7 +58,7 @@ export class MessagingAuthService {
     }
 
     const { nonce, expiry } = this.nonces[signerAddress];
-    const recovered = utils.recoverAddress(nonce, signedNonce);
+    const recovered = utils.verifyMessage(nonce, signedNonce);
     if (recovered !== signerAddress) {
       throw new Error(
         `Verification failed, expected ${signerAddress}, got ${recovered}`
