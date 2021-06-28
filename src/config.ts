@@ -1,4 +1,7 @@
 import { readFileSync } from "fs";
+import { config as dotEnvConfig } from "dotenv";
+
+dotEnvConfig();
 
 let publicKey: string | undefined;
 if (process.env.VECTOR_JWT_SIGNER_PUBLIC_KEY_PATH) {
@@ -7,7 +10,9 @@ if (process.env.VECTOR_JWT_SIGNER_PUBLIC_KEY_PATH) {
     "utf-8"
   );
 }
-publicKey = process.env.VECTOR_JWT_SIGNER_PUBLIC_KEY?.replace(/\\n/g, "\n");
+if (process.env.VECTOR_JWT_SIGNER_PUBLIC_KEY) {
+  publicKey = process.env.VECTOR_JWT_SIGNER_PUBLIC_KEY.replace(/\\n/g, "\n");
+}
 if (!publicKey) {
   throw new Error(
     `VECTOR_JWT_SIGNER_PUBLIC_KEY or VECTOR_JWT_SIGNER_PUBLIC_KEY_PATH is required`
@@ -15,13 +20,19 @@ if (!publicKey) {
 }
 
 let privateKey: string | undefined;
+console.log(
+  "process.env.VECTOR_JWT_SIGNER_PRIVATE_KEY_PATH: ",
+  process.env.VECTOR_JWT_SIGNER_PRIVATE_KEY_PATH
+);
 if (process.env.VECTOR_JWT_SIGNER_PRIVATE_KEY_PATH) {
-  publicKey = readFileSync(
+  privateKey = readFileSync(
     process.env.VECTOR_JWT_SIGNER_PRIVATE_KEY_PATH,
     "utf-8"
   );
 }
-privateKey = process.env.VECTOR_JWT_SIGNER_PRIVATE_KEY?.replace(/\\n/g, "\n");
+if (process.env.VECTOR_JWT_SIGNER_PRIVATE_KEY) {
+  privateKey = process.env.VECTOR_JWT_SIGNER_PRIVATE_KEY.replace(/\\n/g, "\n");
+}
 if (!privateKey) {
   throw new Error(
     `VECTOR_JWT_SIGNER_PRIVATE_KEY or VECTOR_JWT_SIGNER_PRIVATE_KEY_PATH is required`
