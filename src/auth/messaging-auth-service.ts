@@ -4,6 +4,10 @@ import { utils } from "ethers";
 
 const nonceTTL = 24 * 60 * 60 * 1000; // 1 day
 
+const MESSAGE_PREFIX = `Hi there from Connext! Sign this message to make sure that no one can communicate on the Connext Network on your behalf. This will not cost you any Ether!
+  
+To stop hackers from using your wallet, here's a unique message ID that they can't guess: `;
+
 type AuthConfig = {
   clusterId?: string;
   messagingUrl: string | string[];
@@ -58,7 +62,7 @@ export class MessagingAuthService {
     }
 
     const { nonce, expiry } = this.nonces[signerAddress];
-    const recovered = utils.verifyMessage(nonce, signedNonce);
+    const recovered = utils.verifyMessage(MESSAGE_PREFIX + nonce, signedNonce);
     if (recovered !== signerAddress) {
       throw new Error(
         `Verification failed, expected ${signerAddress}, got ${recovered}`
@@ -81,6 +85,7 @@ export class MessagingAuthService {
     };
 
     const jwt = await this.vend(signerAddress, nonceTTL, permissions);
+    this.logger.info({ jwt, signerAddress, permissions }, "Vended token");
     return jwt;
   }
 
