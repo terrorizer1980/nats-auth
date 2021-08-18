@@ -53,12 +53,20 @@ server.post<{ Body: PostAuthRequestBody }>(
   "/auth",
   { schema: { body: postAuthBodySchema, response: postAuthResponseSchema } },
   async (request, reply) => {
-    const token = await messagingService.verifyAndVend(
-      request.body.sig,
-      request.body.signerAddress,
-      request.body.adminToken
-    );
-    return reply.status(200).send(token);
+    try {
+      const token = await messagingService.verifyAndVend(
+        request.body.sig,
+        request.body.signerAddress,
+        request.body.adminToken
+      );
+      return reply.status(200).send(token);
+    } catch (err) {
+      logger.error({ err }, "Error verifying and vending");
+      if (err.message.includes("Verification failed")) {
+        return reply.status(401).send(err.message);
+      }
+      return reply.status(500).send(err.message);
+    }
   }
 );
 
