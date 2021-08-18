@@ -1,0 +1,7 @@
+POST http://localhost:5040/auth
+Content-Type: application/json
+
+{
+  "signerAddress": "foo",
+  "sig": "0x7302c8c905c2f0341256c41c6521a67d0b1ec512148b3833e13dd3d38ff139a633f53135ecff43ceb863b11046a8e149ba9bc2671c88e6a159f3f9377f025ace1b"
+}

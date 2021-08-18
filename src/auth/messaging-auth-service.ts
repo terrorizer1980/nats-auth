@@ -27,7 +27,7 @@ export class MessagingAuthService {
     private readonly logger: BaseLogger,
     private readonly adminToken: string
   ) {
-    this.logger.debug(config, `Created messaging auth service`);
+    this.logger.info({ ...config, privateKey: "*********" }, `Created messaging auth service`);
 
     this.defaultJWTAudience = this.config.messagingUrl as string;
     this.auth = new AuthService(
@@ -43,7 +43,7 @@ export class MessagingAuthService {
     const expiry = Date.now() + nonceTTL;
     // currently storing nonces in memory
     this.nonces[userIdentifier] = { expiry, nonce };
-    this.logger.debug({ userIdentifier, expiry, nonce, method: "getNonce" });
+    this.logger.info({ userIdentifier, expiry, nonce, method: "getNonce" });
     return nonce;
   }
 
